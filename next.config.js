@@ -1,7 +1,5 @@
-
-import type {NextConfig} from 'next';
-
-const nextConfig: NextConfig = {
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   /* config options here */
   typescript: {
     ignoreBuildErrors: true,
@@ -23,7 +21,7 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-       {
+      {
         protocol: 'https',
         hostname: 'openweathermap.org',
         port: '',
@@ -47,7 +45,7 @@ const nextConfig: NextConfig = {
         port: '',
         pathname: '/**',
       },
-      { // Added for Astrocats API if it ever serves images, though primarily data
+      {
         protocol: 'https',
         hostname: 'api.astrocats.space',
         port: '',
@@ -90,5 +88,4 @@ const nextConfig: NextConfig = {
   }
 };
 
-export default nextConfig;
-
+module.exports = nextConfig;
