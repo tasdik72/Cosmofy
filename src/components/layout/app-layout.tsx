@@ -35,6 +35,7 @@ import { cn } from '@/lib/utils';
 import { GlobalInfoHeader } from './global-info-header';
 import { GlobalAIChatWidget } from '@/components/ai/GlobalAIChatWidget'; // New Import
 import { HamburgerIcon } from '@/components/ui/hamburger-icon';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const donateNavItem = { href: '/donate', label: 'Donate', icon: Gift }; // Define donate item separately
 
@@ -50,7 +51,6 @@ const navItems = [
 export function AppLayout({ children }: { children: ReactNode }) {
   const pathname = usePathname();
   const [isChatWidgetOpen, setIsChatWidgetOpen] = useState(false);
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   const mainNavItems = navItems; // Now includes all items except donate
   // const bottomNavItems = navItems.filter(item => item.isBottom); // No bottom items for now
@@ -63,8 +63,6 @@ export function AppLayout({ children }: { children: ReactNode }) {
           variant="sidebar" 
           collapsible="icon" 
           className="border-r border-sidebar-border bg-sidebar text-sidebar-foreground"
-          open={isSidebarOpen}
-          onOpenChange={setIsSidebarOpen}
         >
           <SidebarHeader className="p-4">
             <Link href="/" className="flex items-center gap-2 group">
@@ -141,10 +139,11 @@ export function AppLayout({ children }: { children: ReactNode }) {
               </SidebarMenuItem>
 
             <div className="group-data-[collapsible=icon]:hidden text-xs text-sidebar-foreground/70 flex flex-col sm:flex-row sm:items-center sm:justify-center text-center gap-x-2 w-full">
-              <span>© {new Date().getFullYear()} Cosmofy</span>
+              <span> {children} </span>
               <Link href="/privacy-policy" className="text-primary hover:underline underline-offset-2">
                 Privacy Policy
               </Link>
+              <SpeedInsights />
             </div>
           </SidebarFooter>
         </Sidebar>
@@ -156,15 +155,14 @@ export function AppLayout({ children }: { children: ReactNode }) {
         >
           <header className="sticky top-0 z-30 flex h-20 items-center gap-4 border-b bg-background/80 backdrop-blur-sm w-full px-2 sm:px-4">
             <SidebarTrigger asChild className="md:hidden">
-                <Button 
-                  variant="ghost" 
-                  size="icon"
-                  className="h-24 w-24"
-                  onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-                  aria-label="Toggle menu"
-                >
-                    <HamburgerIcon className="h-12 w-12"/>
-                </Button>
+              <Button 
+                variant="ghost" 
+                size="icon"
+                className="h-24 w-24"
+                aria-label="Toggle menu"
+              >
+                <HamburgerIcon className="h-12 w-12"/>
+              </Button>
             </SidebarTrigger>
             <div className="flex-1 flex justify-end pr-2 sm:pr-4 lg:pr-6">
               <GlobalInfoHeader />
@@ -219,6 +217,9 @@ export function AppLayout({ children }: { children: ReactNode }) {
                  })
               )}
             </div>
+            
+            {/* Vercel Speed Insights */}
+            <SpeedInsights />
             
             {/* AI Chat Widget and FAB */}
             <GlobalAIChatWidget isOpen={isChatWidgetOpen} onClose={() => setIsChatWidgetOpen(false)} />
