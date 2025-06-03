@@ -4,6 +4,7 @@ import './globals.css';
 import { AppLayout } from '@/components/layout/app-layout';
 import { Toaster } from '@/components/ui/toaster';
 import { ThemeProvider } from '@/components/theme-provider';
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const roboto = Roboto({
   weight: ['300', '400', '500', '700'],
@@ -64,6 +65,7 @@ export default function RootLayout({
             {children}
           </AppLayout>
           <Toaster />
+          <SpeedInsights />
         </ThemeProvider>
       </body>
     </html>
