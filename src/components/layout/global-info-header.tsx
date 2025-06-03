@@ -62,63 +62,58 @@ export function GlobalInfoHeader() {
   }, []);
 
   useEffect(() => {
-    if (coords) {
-      const openWeatherApiKey = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
-      const timeZoneDbApiKey = process.env.NEXT_PUBLIC_TIMEZONEDB_API_KEY;
-
-      if (!openWeatherApiKey) {
-        console.warn('OpenWeather API key not found.');
-        setWeather(null); // Or set a specific error state for weather
-      } else {
-        // Fetch Weather
-        fetch(`https://api.openweathermap.org/data/2.5/weather?lat=${coords.latitude}&lon=${coords.longitude}&appid=${openWeatherApiKey}&units=metric`)
-          .then(res => res.json())
-          .then(data => {
-            if (data.weather && data.main) {
-              setWeather({
-                description: data.weather[0].description,
-                icon: data.weather[0].icon,
-                temp: data.main.temp,
-                city: data.name,
-              });
-              setLocation(data.name); // Update location with city name
-            } else {
-              throw new Error('Invalid weather data structure');
-            }
-          })
-          .catch(err => {
-            console.error("Failed to fetch weather:", err);
-            setWeather(null); // Or set an error message
-            setError(prev => prev ? `${prev} Weather data unavailable.` : 'Weather data unavailable.');
+    if (!coords) return;
+    
+    // Fetch Weather
+    fetch(`/api/weather?lat=${coords.latitude}&lng=${coords.longitude}`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.weather && data.main) {
+          setWeather({
+            description: data.weather[0].description,
+            icon: data.weather[0].icon,
+            temp: data.main.temp,
+            city: data.name,
           });
-      }
+          setLocation(data.name); // Update location with city name
+        } else {
+          throw new Error('Invalid weather data structure');
+        }
+      })
+      .catch(error => {
+        console.error('Error fetching weather data:', error);
+        setWeather(null);
+        setError(prev => prev ? `${prev} Weather data unavailable.` : 'Weather data unavailable.');
+      });
 
-      if (!timeZoneDbApiKey) {
-          console.warn('TimeZoneDB API key not found.');
-          setTimeZoneInfo(null);
-      } else {
-        // Fetch Timezone specific time (can be more accurate or provide timezone name)
-        fetch(`https://api.timezonedb.com/v2.1/get-time-zone?key=${timeZoneDbApiKey}&format=json&by=position&lat=${coords.latitude}&lng=${coords.longitude}`)
-        .then(res => res.json())
-        .then(data => {
-          if (data.status === "OK") {
-            setTimeZoneInfo({
-              formattedTime: new Date(data.formatted).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-              abbreviation: data.abbreviation,
-            });
-            // If TimeZoneDB provides a more accurate local time, you can use it
-            // setCurrentTime(`${new Date(data.formatted).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} ${data.abbreviation || ''}`);
-          } else {
-            throw new Error(data.message || 'Failed to fetch timezone data');
-          }
-        })
-        .catch(err => {
-            console.error("Failed to fetch timezone data:", err);
-            setTimeZoneInfo(null);
-             setError(prev => prev ? `${prev} Timezone data unavailable.` : 'Timezone data unavailable.');
-        });
-      }
-    }
+    // Fetch Timezone
+    fetch(`/api/timezone?lat=${coords.latitude}&lng=${coords.longitude}`)
+      .then(res => {
+        if (!res.ok) {
+          throw new Error('Failed to fetch timezone data');
+        }
+        return res.json();
+      })
+      .then(data => {
+        if (data.status === "OK") {
+          setTimeZoneInfo({
+            formattedTime: new Date(data.formatted).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            abbreviation: data.abbreviation,
+          });
+        } else {
+          throw new Error(data.message || 'Failed to fetch timezone data');
+        }
+      })
+      .catch(error => {
+        console.error("Failed to fetch timezone data:", error);
+        setTimeZoneInfo(null);
+        setError(prev => prev ? `${prev} Timezone data unavailable.` : 'Timezone data unavailable.');
+      });
   }, [coords]);
 
   const [mounted, setMounted] = useState(false);

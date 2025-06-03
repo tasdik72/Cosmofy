@@ -1,7 +1,7 @@
 
 // src/services/timeZoneDbApi.ts
 const TIMEZONEDB_API_BASE_URL = 'https://api.timezonedb.com/v2.1';
-const API_KEY = process.env.NEXT_PUBLIC_TIMEZONEDB_API_KEY;
+const API_KEY = process.env.TIMEZONEDB_API_KEY;
 
 interface FetchTimeZoneParams {
   lat: number;

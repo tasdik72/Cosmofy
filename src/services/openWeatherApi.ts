@@ -1,7 +1,7 @@
 
 // src/services/openWeatherApi.ts
 const OPENWEATHER_API_BASE_URL = 'https://api.openweathermap.org/data/2.5';
-const API_KEY = process.env.NEXT_PUBLIC_OPENWEATHER_API_KEY;
+const API_KEY = process.env.OPENWEATHER_API_KEY;
 
 interface FetchWeatherParams {
   lat: number;

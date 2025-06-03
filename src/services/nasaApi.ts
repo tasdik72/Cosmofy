@@ -4,9 +4,8 @@
 
 const NASA_API_BASE_URL = 'https://api.nasa.gov';
 
-// Use NEXT_PUBLIC_ prefixed key if calling from client-side components directly
-// or non-prefixed if this service is only called from server-side (e.g. route handlers, server components)
-const API_KEY = process.env.NEXT_PUBLIC_NASA_API_KEY || process.env.NASA_API_KEY;
+// Using non-prefixed API key for server-side only usage
+const API_KEY = process.env.NASA_API_KEY;
 
 export type NasaDonkiApiEndpoint = 
   | 'CME' 
